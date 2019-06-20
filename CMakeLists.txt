@@ -8,7 +8,7 @@ set (CMAKE_CXX_STANDARD 11)
 project( cren )
 
 # Find packages
-find_package( Boost )
+find_package( Boost COMPONENTS program_options )
 
 # include
 include_directories( ./src ${Boost_INCLUDE_DIRS} )
