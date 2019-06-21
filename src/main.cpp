@@ -2,8 +2,10 @@
 #include <string>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include <regex>
 
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 
 // Function to parse command line arguments
 bool parse_args(int argc, char** argv, po::variables_map& args){
@@ -12,7 +14,7 @@ bool parse_args(int argc, char** argv, po::variables_map& args){
   po::options_description desc("Allowed options");
   desc.add_options()
     ("help,h", "Help message")
-    ("find,f",po::value<std::string>(), "Find pattern")
+    ("find,f",po::value<std::string>()->required(), "Find pattern")
     ("rename,r",po::value<std::string>(),"Rename pattern")
     ("directory,d",po::value<std::string>()->default_value("./"), "Directory")
     ("no-confirmation,n", "Do not provide confirmation")
@@ -45,6 +47,20 @@ int main(int argc, char** argv){
   if(!parse_args(argc,argv,args)){
     return 0;
   }
+
+  std::string dir = args["directory"].as<std::string>();
+
+  std::string find_pat = args["find"].as<std::string>();
+
+  std::regex ro(find_pat);
+
+  for(fs::directory_entry& de : fs::directory_iterator(dir)){
+    std::string path_str = de.path().string();
+    if(std::regex_search(path_str,ro)){
+      std::cout << path_str << std::endl;
+    }
+  }
+
 
   return 0;
 }
