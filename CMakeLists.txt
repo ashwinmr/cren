@@ -8,6 +8,7 @@ set (CMAKE_CXX_STANDARD 11)
 project( cren )
 
 # Find packages
+set(Boost_USE_STATIC_LIBS ON)
 find_package( Boost COMPONENTS program_options filesystem )
 
 # include
