@@ -11,7 +11,7 @@ namespace fs = boost::filesystem;
 bool parse_args(int argc, char** argv, po::variables_map& args) {
 
     // Declare supported options
-    po::options_description desc("Allowed options");
+    po::options_description desc("A program to rename files. Allowed options");
     desc.add_options()
         ("help,h", "Help message")
         ("find,f", po::value<std::string>()->required(), "Find pattern")
