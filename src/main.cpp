@@ -16,7 +16,7 @@ bool parse_args(int argc, char** argv, po::variables_map& args){
     ("help,h", "Help message")
     ("find,f",po::value<std::string>()->required(), "Find pattern")
     ("ignore_case,i",po::bool_switch()->default_value(false), "Ignore case")
-    ("rename,r",po::value<std::string>(),"Rename pattern")
+    ("rename,r",po::value<std::string>()->required(),"Rename pattern")
     ("directory,d",po::value<std::string>()->default_value("./"), "Directory")
     ("no-confirmation,n", "Do not provide confirmation")
   ;
@@ -55,6 +55,9 @@ int main(int argc, char** argv){
   // Get find pattern
   std::string find_pat = args["find"].as<std::string>();
 
+  // Get rename pattern
+  std::string ren_pat = args["rename"].as<std::string>();
+
   // Set icase flag
   std::regex::flag_type icase;
   if(args["ignore_case"].as<bool>()){
@@ -64,16 +67,23 @@ int main(int argc, char** argv){
     icase = static_cast<std::regex::flag_type>(0);
   }
 
+  // Create vector of old and new file names
+  std::vector<std::pair<std::string,std::string>> results;
+
   // Create regex object
   std::regex ro(find_pat, icase);
 
   for(fs::directory_entry& de : fs::directory_iterator(dir)){
-    std::string path_str = de.path().string();
-    if(std::regex_search(path_str,ro)){
-      std::cout << path_str << std::endl;
+    std::string file_str = de.path().filename().string();
+    if(std::regex_search(file_str,ro)){
+      results.push_back(std::pair<std::string,std::string>(file_str,ren_pat));
     }
   }
 
+  std::cout << "Results: " << std::endl;
+  for(auto& result : results){
+    std::cout << result.first << "\t" << result.second << std::endl;
+  }
 
   return 0;
 }
