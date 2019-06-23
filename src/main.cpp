@@ -30,8 +30,8 @@ bool parse_args(int argc, char** argv, po::variables_map& args) {
     po::store(po::command_line_parser(argc, argv).
         options(desc).positional(desc_p).run(), args);
 
-    // Handle help before checking inputs for errors
-    if (args.count("help")) {
+    // Handle help before checking for errors
+    if (args.count("help") || (argc < 2)) {
         std::cout << desc << std::endl;
         return false;
     }
