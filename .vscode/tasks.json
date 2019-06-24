@@ -17,7 +17,7 @@
             }
         },
         {
-            "label": "build_linux",
+            "label": "build_mac",
             "type": "shell",
             "command": "cd '${workspaceFolder}/build' && cmake .. -DCMAKE_BUILD_TYPE=Debug && cmake --build . ",
             "group": {
@@ -31,7 +31,7 @@
             "problemMatcher": []
         },
         {
-            "label": "build_mac",
+            "label": "build_linux",
             "type": "shell",
             "command": "cd '${workspaceFolder}/build' && cmake .. -DCMAKE_BUILD_TYPE=Debug && cmake --build . ",
             "group": {
@@ -43,6 +43,6 @@
                 "showReuseMessage": false
             },
             "problemMatcher": []
-        }
+        },
     ]
 }
