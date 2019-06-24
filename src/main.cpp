@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 
   for(fs::directory_entry& de : fs::directory_iterator(dir)){
     std::string file_str = de.path().filename().string();
-    if(std::regex_search(file_str,ro)){
+    if(std::regex_match(file_str,ro)){
       results.push_back(std::pair<std::string,std::string>(file_str,ren_pat));
     }
   }
