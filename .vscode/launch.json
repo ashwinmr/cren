@@ -5,7 +5,37 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "run_unix",
+            "name": "run_windows",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug/cren.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask" : "",
+            "logging": {
+                "moduleLoad": false
+             },
+        },
+        {
+            "name": "run_mac",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/cren",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "logging": {
+                "moduleLoad": false
+            },
+        },
+        {
+            "name": "run_linux",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/cren",
@@ -23,20 +53,6 @@
                 }
             ]
         },
-        {
-            "name": "run_windows",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/cren.exe",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "preLaunchTask" : "",
-            "logging": {
-                "moduleLoad": false
-             },
-        },
+
     ]
 }
