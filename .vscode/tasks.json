@@ -6,15 +6,29 @@
         {
             "label": "build_windows",
             "type": "shell",
-            "command": "cd '${workspaceFolder}/build' && cmake .. && cmake --build .",
+            "command": "cd '${workspaceFolder}/build' && cmake .. && cmake --build . ",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "presentation": {
                 "reveal": "always",
-                "showReuseMessage": false,
-           }
+                "showReuseMessage": false
+            }
+        },
+        {
+            "label": "build_unix",
+            "type": "shell",
+            "command": "cd '${workspaceFolder}/build' && cmake .. -DCMAKE_BUILD_TYPE=Debug && cmake --build . ",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "showReuseMessage": false
+            },
+            "problemMatcher": []
         }
     ]
 }
