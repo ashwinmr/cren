@@ -51,14 +51,11 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  // Get directory
-  std::string dir = args["directory"].as<std::string>();
+  // Store inputs
 
-  // Get find pattern
-  std::string find_pat = args["find"].as<std::string>();
-
-  // Get rename pattern
-  std::string ren_pat = args["rename"].as<std::string>();
+  std::string dir = args["directory"].as<std::string>(); // Directory
+  std::string find_pat = args["find"].as<std::string>(); // Find pattern
+  std::string ren_pat = args["rename"].as<std::string>(); // Rename pattern
 
   // Set icase flag
   std::regex::flag_type icase;
@@ -73,15 +70,25 @@ int main(int argc, char** argv) {
   std::vector<std::pair<std::string,std::string>> results;
 
   // Create regex object
-  std::regex ro(find_pat, icase);
+  std::regex ro(find_pat, icase); // Regex object
 
+  // Create rename list from files in directory
   for(fs::directory_entry& de : fs::directory_iterator(dir)){
-    std::string file_str = de.path().filename().string();
-    if(std::regex_match(file_str,ro)){
-      results.push_back(std::pair<std::string,std::string>(file_str,ren_pat));
+    std::string old_str = de.path().filename().string();
+    std::smatch sm; // String match object
+
+    // Check for matching file
+    if(std::regex_match(old_str,sm,ro)){
+      
+      // Create rename string by using patterns
+      std::string new_str = std::regex_replace(old_str, ro, ren_pat, std::regex_constants::format_no_copy);
+
+      // Store results
+      results.push_back(std::pair<std::string,std::string>(old_str,new_str));
     }
   }
 
+  // Display results
   std::cout << "Results: " << std::endl;
   for(auto& result : results){
     std::cout << result.first << "\t" << result.second << std::endl;
