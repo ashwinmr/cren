@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
     // Check for matching file
     if(std::regex_match(old_str,sm,ro)){
-      
+
       // Create rename string by using patterns
       std::string new_str = std::regex_replace(old_str, ro, ren_pat, std::regex_constants::format_no_copy);
 
