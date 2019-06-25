@@ -17,7 +17,7 @@ bool parse_args(int argc, char** argv, po::variables_map& args) {
         ("find,f", po::value<std::string>()->required(), "Find pattern")
         ("ignore_case,i", po::bool_switch()->default_value(false), "Ignore case")
         ("rename,r", po::value<std::string>()->required(), "Rename pattern")
-        ("directory,d", po::value<std::string>()->default_value("./"), "Directory")
+        ("directory,d", po::value<std::string>(), "Directory")
         ("no-confirmation,n", "Do not provide confirmation")
         ;
 
@@ -53,9 +53,17 @@ int main(int argc, char** argv) {
 
   // Store inputs
 
-  std::string dir = args["directory"].as<std::string>(); // Directory
   std::string find_pat = args["find"].as<std::string>(); // Find pattern
   std::string ren_pat = args["rename"].as<std::string>(); // Rename pattern
+
+  // Set directory
+  fs::path dir;
+  if(args.count("directory")){
+    dir = fs::path(args["directory"].as<std::string>());
+  }
+  else{
+    dir = fs::current_path();
+  }
 
   // Set icase flag
   std::regex::flag_type icase;
