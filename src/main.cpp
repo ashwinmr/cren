@@ -11,55 +11,68 @@ namespace fs = boost::filesystem;
 // Function to parse command line arguments
 bool parse_args(int argc, char** argv, po::variables_map& args) {
 
-    // Declare supported options
-    po::options_description desc("A program to rename files. Allowed options");
-    desc.add_options()
-        ("help,h", "Help message")
-        ("find,f", po::value<std::string>()->required(), "Find pattern")
-        ("ignore_case,i", po::bool_switch()->default_value(false), "Ignore case")
-        ("rename,r", po::value<std::string>()->required(), "Rename pattern")
-        ("directory,d", po::value<std::string>(), "Directory")
-        ("confirm,c", po::bool_switch()->default_value(true), "Ask for confirmation")
-        ;
+  // Declare supported options
+  po::options_description desc("A program to rename files. Allowed options");
+  desc.add_options()
+    ("help,h", "Help message")
+    ("find,f", po::value<std::string>()->required(), "Find pattern")
+    ("ignore_case,i", po::bool_switch()->default_value(false), "Ignore case")
+    ("rename,r", po::value<std::string>()->required(), "Rename pattern")
+    ("directory,d", po::value<std::string>(), "Directory")
+    ("confirm,c", po::bool_switch()->default_value(true), "Ask for confirmation")
+    ;
 
-    // Make options positional
-    po::positional_options_description desc_p;
-    desc_p.add("find", 1);
-    desc_p.add("rename", 1);
+  // Make options positional
+  po::positional_options_description desc_p;
+  desc_p.add("find", 1);
+  desc_p.add("rename", 1);
 
-    // Store options
-    po::store(po::command_line_parser(argc, argv).
-        options(desc).positional(desc_p).run(), args);
+  // Store options
+  po::store(po::command_line_parser(argc, argv).options(desc).positional(desc_p).run(), args);
 
-    // Handle help before checking for errors
-    if (args.count("help") || (argc < 2)) {
-        std::cout << desc << std::endl;
-        return false;
-    }
+  // Handle help before checking for errors
+  if (args.count("help") || (argc < 2)) {
+      std::cout << desc << std::endl;
+      return false;
+  }
 
-    // Check inputs for errors
-    po::notify(args);
+  // Check inputs for errors
+  po::notify(args);
 
-    // Continue the program
-    return true;
+  // Continue the program
+  return true;
 }
 
 int main(int argc, char** argv) {
 
   //  Parse arguments
   po::variables_map args;
-  if(!parse_args(argc,argv,args)){
+  try{
+    if(!parse_args(argc,argv,args)){
+      return 0;
+    }
+  }
+  catch( po::error& e){
+    std::cout << "Error: " << e.what() << std::endl;
     return 0;
   }
 
   // Store inputs
   std::string find_pat = args["find"].as<std::string>(); // Find pattern
   std::string ren_pat = args["rename"].as<std::string>(); // Rename pattern
+  if(ren_pat.empty()){
+    std::cout << "Error: Invalid rename pattern" << std::endl;
+    return 0;
+  }
 
   // Set directory
   fs::path dir;
   if(args.count("directory")){
     dir = fs::path(args["directory"].as<std::string>());
+    if(!fs::is_directory(dir)){
+      std::cout << "Error: Invalid directory specified" << std::endl;
+      return 0;
+    }
   }
   else{
     dir = fs::current_path();
@@ -119,8 +132,15 @@ int main(int argc, char** argv) {
 
   // Perform rename
   if(perform){
+    std::cout << "\nRenaming...\n\n";
     for(auto& result: results){
-      fs::rename(result.first,result.second);
+      try{
+        std::cout << result.first.filename().string() << " -> " << result.second.filename().string() << std::endl;
+        fs::rename(result.first,result.second);
+      }
+      catch( fs::filesystem_error& e ){
+        std::cout << "Error: " << e.what() << std::endl << std::endl;
+      }
     }
   }
 
