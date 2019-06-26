@@ -3,6 +3,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <regex>
+#include <iomanip>
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
@@ -18,7 +19,7 @@ bool parse_args(int argc, char** argv, po::variables_map& args) {
         ("ignore_case,i", po::bool_switch()->default_value(false), "Ignore case")
         ("rename,r", po::value<std::string>()->required(), "Rename pattern")
         ("directory,d", po::value<std::string>(), "Directory")
-        ("no-confirmation,n", "Do not provide confirmation")
+        ("confirm,c", po::bool_switch()->default_value(true), "Ask for confirmation")
         ;
 
     // Make options positional
@@ -52,7 +53,6 @@ int main(int argc, char** argv) {
   }
 
   // Store inputs
-
   std::string find_pat = args["find"].as<std::string>(); // Find pattern
   std::string ren_pat = args["rename"].as<std::string>(); // Rename pattern
 
@@ -74,8 +74,8 @@ int main(int argc, char** argv) {
     icase = static_cast<std::regex::flag_type>(0);
   }
 
-  // Create vector of old and new file names
-  std::vector<std::pair<std::string,std::string>> results;
+  // Create vector of old and new paths
+  std::vector<std::pair<fs::path,fs::path>> results;
 
   // Create regex object
   std::regex ro(find_pat, icase); // Regex object
@@ -92,14 +92,36 @@ int main(int argc, char** argv) {
       std::string new_str = std::regex_replace(old_str, ro, ren_pat, std::regex_constants::format_no_copy);
 
       // Store results
-      results.push_back(std::pair<std::string,std::string>(old_str,new_str));
+      results.push_back(std::pair<fs::path,fs::path>(de.path(),fs::path(dir).append(new_str)));
     }
   }
 
   // Display results
-  std::cout << "Results: " << std::endl;
+  std::cout << std::left; // Left justify
+  std::cout << "\nThe following files will be renamed:\n";
   for(auto& result : results){
-    std::cout << result.first << "\t" << result.second << std::endl;
+    std::cout << std::setw(30) << result.first.filename().string() << std::setw(30) << result.second.filename().string() << std::endl;
+  }
+
+  // Ask for confirmation before renaming
+  bool perform = true;
+  if(args["confirm"].as<bool>()){
+    std::string resp;
+    do{
+      std::cout << "\nContinue? [y/n]\n";
+      std::cin >> resp;
+    }
+    while( !std::cin.fail() && resp!="y" && resp!="n" );
+    if(resp == "n"){
+      perform = false;
+    }
+  }
+
+  // Perform rename
+  if(perform){
+    for(auto& result: results){
+      fs::rename(result.first,result.second);
+    }
   }
 
   return 0;
