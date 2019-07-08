@@ -20,7 +20,7 @@ make
 
 # Install
 ```
-make install
+sudo make install
 ```
 
 # Usage
