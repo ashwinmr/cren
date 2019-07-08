@@ -24,6 +24,9 @@ add_executable( cren ./src/main.cpp )
 # use main source code as a library and target other libraries
 target_link_libraries( cren src ${Boost_LIBRARIES} )
 
+# Install
+install(TARGETS cren DESTINATION bin)
+
 # testing
 enable_testing()
 add_test(
