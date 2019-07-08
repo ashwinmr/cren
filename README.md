@@ -6,10 +6,11 @@ cren takes a regex pattern for filenames and a regex pattern for new filenames a
 
 # Build
 
-```
-# Install boost
-sudo apt-get install libboost-all-dev
+cren has the folling dependencies that need to be installed before building
+  - boost
+  - google test
 
+```
 git clone --recursive git@github.com:ashwinmr/cren.git
 cd cren
 mkdir build
