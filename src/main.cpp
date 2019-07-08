@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     if(std::regex_match(old_str,sm,ro)){
 
       // Create rename string by using patterns
-      std::string new_str = std::regex_replace(old_str, ro, ren_pat, std::regex_constants::format_no_copy);
+      std::string new_str = std::regex_replace(old_str, ro, ren_pat, std::regex_constants::format_no_copy | std::regex_constants::format_first_only );
 
       // Store results
       results.push_back(std::pair<fs::path,fs::path>(de.path(),fs::path(dir).append(new_str)));
