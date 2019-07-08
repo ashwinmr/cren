@@ -14,3 +14,9 @@ cd build
 cmake ..
 make
 ```
+
+# Running tests
+```
+cd build
+ctest -V
+```
