@@ -101,6 +101,7 @@ int main(int argc, char** argv) {
     std::cout << "\nRenaming...\n\n";
     for(auto& result: results){
       try{
+        // Display rename action
         std::cout << result.first.filename().string() << " -> " << result.second.filename().string() << std::endl;
         fs::rename(result.first,result.second);
       }
