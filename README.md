@@ -30,6 +30,7 @@ cren <"old_filename_pattern"> <"new_filename_pattern"> [ -d <path/to/directory> 
 ```
 The following flags are supported:
 - -i - ignore case
+- -y - Don't ask for confirmation
 
 ## Examples
 Example 1: Basic rename

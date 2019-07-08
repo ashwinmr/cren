@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 
   // Ask for confirmation before renaming
   bool perform = true;
-  if(args["confirm"].as<bool>()){
+  if(!args["no_confirm"].as<bool>()){
     std::string resp;
     do{
       std::cout << "\nContinue? [y/n]\n";

@@ -16,7 +16,7 @@ bool parse_args(int argc, char** argv, po::variables_map& args) {
     ("ignore_case,i", po::bool_switch()->default_value(false), "Ignore case")
     ("rename,r", po::value<std::string>()->required(), "Rename pattern")
     ("directory,d", po::value<std::string>(), "Directory")
-    ("confirm,c", po::bool_switch()->default_value(true), "Ask for confirmation")
+    ("no_confirm,y", po::bool_switch()->default_value(false), "Don't ask for confirmation")
     ;
 
   // Make options positional
