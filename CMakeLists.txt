@@ -1,33 +1,33 @@
-# cmake version to be used
+# Cmake version to be used
 cmake_minimum_required( VERSION 3.1 )
 
 # Set minimum cpp version
 set (CMAKE_CXX_STANDARD 11)
 
-# project name
+# Project name
 project( cren )
 
-# Find packages
-set(Boost_USE_STATIC_LIBS ON)
-find_package( Boost COMPONENTS program_options filesystem )
-
-# add subdirectories
+# Add subdirectories
 add_subdirectory (src)
 add_subdirectory (test)
 
-# include
+# Find packages for all dependencies
+set(Boost_USE_STATIC_LIBS ON)
+find_package( Boost COMPONENTS program_options filesystem )
+
+# Include all dependencies
 include_directories( ./src ${Boost_INCLUDE_DIRS} )
 
-# add executable
+# Add executable
 add_executable( cren ./src/main.cpp )
 
-# use main source code as a library and target other libraries
-target_link_libraries( cren src ${Boost_LIBRARIES} )
+# Use main source code as a library and target it
+target_link_libraries( cren src )
 
 # Install
 install(TARGETS cren DESTINATION bin)
 
-# testing
+# Testing
 enable_testing()
 add_test(
   NAME test_main
